@@ -4,6 +4,8 @@ import axios from 'axios';
 import { PieChart } from 'react-native-chart-kit';
 
 const index = () => {
+  // when new task added in the Home screen, it doesn't show here!!!
+  // useContext
   const [completedTasks, setCompletedTasks] = useState(0);
   const [pendingTasks, setPendingTasks] = useState(0);
   const fetchTaskData = async () => {

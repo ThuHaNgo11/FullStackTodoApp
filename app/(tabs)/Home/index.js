@@ -10,9 +10,10 @@ import {
 } from "react-native-modals";
 import axios from "axios";
 import moment from "moment";
-
+import { useRouter } from 'expo-router';
 
 const index = () => {
+  const router = useRouter();
   const today = moment().format("MMM Do YY")
   const [todos, setTodos] = useState([]);
   const [pendingTodos, setPendingTodos] = useState([]);
@@ -64,7 +65,7 @@ const index = () => {
         })
         .catch((e) => { console.log(e) });
 
-      await getUserTodos();  
+      await getUserTodos();
       setIsModalvisible(false);
       setTodo("");
     } catch (error) {
@@ -84,7 +85,7 @@ const index = () => {
     }
     try {
       const response = await axios.get("http://localhost:3000/users/66323afa15787621bd175154/todos")
-  
+
       // categorise todos into 2 categories: pending and complete
       const fetchedTodos = response.data.todos || [];
       setTodos(fetchedTodos);
@@ -137,7 +138,7 @@ const index = () => {
         <View>
           {todos?.length ?
             (<View>
-              {pendingTodos?.length > 0 && <Text>Tasks need to be done today - {today}</Text>}
+              {pendingTodos?.length > 0 && <Text style={{margin: 15}}>Tasks need to be done today - {today}</Text>}
 
               {pendingTodos?.map((item, index) => (
                 <TouchableOpacity key={index} style={styles.todoTouchable}>
@@ -149,14 +150,29 @@ const index = () => {
                       color="black"
                     />
                     <Text style={{ flex: 1 }}>{item.title}</Text>
-                    <Feather name="flag" size={20} color="black" />
+                    {/* <Feather name="flag" size={20} color="black" /> */}
+                    <AntDesign
+                      onPress={() => { router.push({
+                        pathname: "/Home/info",
+                        params: {
+                          id: item._id,
+                          title: item.title,
+                          category: item.category,
+                          createdAt: item.createdAt,
+                          dueDate: item.dueDate
+                        }
+                      }) }}
+                      name="arrowright"
+                      size={20}
+                      color="black"
+                    />
                   </View>
                 </TouchableOpacity>
               ))}
 
               {completedTodos?.length > 0 && (
                 <View>
-                  <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
+                  <View style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                     <Image
                       style={{ width: 100, height: 100 }}
                       source={{ uri: "https://cdn-icons-png.flaticon.com/128/6784/6784655.png" }}
@@ -171,9 +187,10 @@ const index = () => {
                   {completedTodos?.map((item, index) => (
                     <TouchableOpacity key={index} style={styles.todoTouchable}>
                       <View style={styles.todoContainter}>
-                      <Octicons name="check-circle-fill" size={18} color="gray" />
+                        <Octicons name="check-circle-fill" size={18} color="gray" />
                         <Text style={{ flex: 1, textDecorationLine: 'line-through', color: 'gray' }}>{item.title}</Text>
-                        <Feather name="flag" size={20} color="gray" />
+                        {/* <Feather name="flag" size={20} color="gray" /> */}
+                        <AntDesign name="arrowright" size={20} color="black" />
                       </View>
                     </TouchableOpacity>
                   ))}

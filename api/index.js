@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
+require('dotenv').config()
+// config will read .env file, parse the contents, assign it to process.env, and return an Object with a parsed key containing the loaded content or an error key if it failed.
 
 const app = express();
 const port = 3000;
@@ -12,8 +14,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const jwt = require("jsonwebtoken")
 const moment = require("moment")
+const mongodbUrl = process.env.MONGODB_URL
 
-mongoose.connect("mongodb+srv://21520131:2iKUnuguB41krika@cluster0.i36dfhi.mongodb.net/").then(() => {
+mongoose.connect(mongodbUrl).then(() => {
     console.log("Connected to Mongodb")
 }).catch(e => {
     console.log("Error connecting to Mongodb", e)
